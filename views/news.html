@@ -1,0 +1,11 @@
+{{template "base/base.html" .}}
+
+{{define "head"}}
+<title>{{ .Title}}</title>
+{{end}}
+
+{{define "body"}}
+<div class="page-header"><h1>{{ .Title}}</h1></div>
+<img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9">
+<p>{{ .Content}}
+{{end}}

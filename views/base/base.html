@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{{template "base/head.html" .}}
+		{{template "head" .}}
+	</head>
+	<body>
+		<ul class="nav nav-pills">
+  			<li role="presentation" class="active"><a href="/">Home</a></li>
+  			<li role="presentation"><a href="#">Profile</a></li>
+			<li role="presentation"><a href="/news">Messages</a></li>
+		</ul>
+		{{template "body" .}}
+		{{template "base/footer.html" .}}
+	</body>
+</html>
