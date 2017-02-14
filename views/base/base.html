@@ -6,11 +6,21 @@
 	</head>
 	<body>
 		<ul class="nav nav-pills">
-  			<li role="presentation" class="active"><a href="/">Home</a></li>
+  			<li role="presentation"><a href="/">Home</a></li>
   			<li role="presentation"><a href="#">Profile</a></li>
 			<li role="presentation"><a href="/news">Messages</a></li>
 		</ul>
 		{{template "body" .}}
+		<div class="row">
+  			<div class="col-md-8">
+				{{template "left-side" .}}
+			</div>
+			
+  			<div class="col-md-4">
+				{{template "right-side" .}}
+      		</div>
+		</div>
 		{{template "base/footer.html" .}}
+		
 	</body>
 </html>
