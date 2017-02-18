@@ -8,8 +8,9 @@ import (
 )
 
 type Blog struct {
-	Title   string
-	Content string
+	Id      bson.ObjectId `json:"id" bson:"_id"`
+	Title   string        `json:"title" bson:"title"`
+	Content string        `json:"content" bson:"content"`
 }
 
 func (b Blog) Get_newest_blog() *Blog {
@@ -20,7 +21,7 @@ func (b Blog) Get_newest_blog() *Blog {
 
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB("newblog").C("blog")
+	c := session.DB("simpleblog").C("simpleblog")
 	result := Blog{}
 	error = c.Find(nil).Sort("-create_time").One(&result)
 	if error != nil {
@@ -30,7 +31,7 @@ func (b Blog) Get_newest_blog() *Blog {
 	return &result
 }
 
-func (b Blog) Get_by_id() *Blog {
+func (b Blog) Get_by_id(id string) *Blog {
 	session, err := mgo.Dial("10.200.8.127:27017")
 	if err != nil {
 		panic(err)
@@ -38,8 +39,9 @@ func (b Blog) Get_by_id() *Blog {
 
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB("newblog").C("blog")
+	c := session.DB("simpleblog").C("simpleblog")
 	result := Blog{}
-	err = c.Find(bson.M{"_id": bson.ObjectIdHex("58a2d40e76404ae67b470d30")}).One(&result)
+	//	err = c.Find(bson.M{"_id": bson.ObjectIdHex("58a2d40e76404ae67b470d30")}).One(&result)
+	err = c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&result)
 	return &result
 }
