@@ -27,16 +27,20 @@ type MainController struct {
 //}
 
 func (c *MainController) Get() {
+
 	blog_inst := models.Blog{}
 	blog := blog_inst.Get_newest_blog()
 
 	c.Data["Title"] = blog.Title
-	c.Data["Content"] = utils.RemoveHtmlTag(blog.Content)[:40]
+	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
+	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(blog.Content))[:preview_count])
 	c.Data["Id"] = blog.Id
 	c.Data["NewUrl"] = "/getone?id=" + blog.Id.Hex()
-	//	fmt.Println(c.Data["NewUrl"])
+	//	c.Data["Author"] = blog.Author.Hex()
+	c.Data["Author"] = beego.AppConfig.String("author")
 
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
+	c.Data["Website"] = beego.AppConfig.String("website")
+	c.Data["Email"] = beego.AppConfig.String("email")
 	c.TplName = "welcome.html"
+
 }
