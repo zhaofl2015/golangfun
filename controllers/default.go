@@ -33,6 +33,9 @@ func (c *MainController) Get() {
 
 	c.Data["Title"] = blog.Title
 	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
+	if len([]rune(utils.RemoveHtmlTag(blog.Content))) < preview_count {
+		preview_count = len([]rune(utils.RemoveHtmlTag(blog.Content)))
+	}
 	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(blog.Content))[:preview_count])
 	c.Data["Id"] = blog.Id
 	c.Data["NewUrl"] = "/getone?id=" + blog.Id.Hex()

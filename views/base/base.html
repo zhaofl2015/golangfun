@@ -7,19 +7,22 @@
 	<body>
 		<ul class="nav nav-pills">
   			<li role="presentation"><a href="/">Home</a></li>
+			<li role="presentation"><a href="/blog-list">Blogs</a></li>
   			<li role="presentation"><a href="/getone?id=58a7189359acd10574104fba">DisplayOne</a></li>
 			<li role="presentation"><a href="/news">News</a></li>
 			<li role="presentation"><a href="/logout">Logout</a></li>
 		</ul>
-		{{template "body" .}}
-		<div class="row">
-  			<div class="col-md-8">
-				{{template "left-side" .}}
+		<div class="container">
+			{{template "body" .}}
+			<div class="row">
+	  			<div class="col-md-8">
+					{{template "left-side" .}}
+				</div>
+				
+	  			<div class="col-md-4">
+					{{template "right-side" .}}
+	      		</div>
 			</div>
-			
-  			<div class="col-md-4">
-				{{template "right-side" .}}
-      		</div>
 		</div>
 		{{template "base/footer.html" .}}
 		

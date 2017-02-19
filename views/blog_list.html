@@ -1,0 +1,45 @@
+{{template "base/base.html" .}}
+
+{{define "head"}}
+{{end}}
+
+{{define "body"}}
+{{end}}
+
+{{define "left-side"}}
+{{range .data}}
+<article class="article">
+    <div class="row">
+                 <header class="header">
+                     <h3 class="title">
+                         <label class="label label-primary">原</label>
+                         <a href="/getone?id={{.Id}}">{{.Title}}</a>
+                     </h3>
+                 </header>
+                 <section class=" markdown-body editormd-html-preview">
+                     {{.Content |str2html}}
+                 </section>
+                 <aside class="aside clearfix">
+					<span>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</span>
+                     <!--<span class="date">
+                            <span class="year">{{dateformat .CreateTime "2006"}}</span>/
+                            <span class="month">{{dateformat .CreateTime "01"}}</span>/
+                            <span class="day">{{dateformat .CreateTime "02"}}</span>
+                        </span>-->
+					  <a class="day"><i class="fa fa-eye"></i> {{.ViewCount}}</a>
+                     <a class="author" title="作者">{{.Author}}</a>
+					 <span class="tags">
+                            {{range $i,$v:=.Tags}}
+                            <a class="tag">{{$v}}</a>
+                             {{end}}
+                        </span>
+                     <a class="btn btn-primary btn-lg pull-right" href="/getone?id={{.Id}}">详情</a>
+                 </aside>
+             </div>
+</article>
+{{end}}
+{{end}}
+
+{{define "right-side"}}
+{{template "base/right.html" .}}
+{{end}}
