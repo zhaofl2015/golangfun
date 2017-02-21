@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	"hello/models"
+
 	"github.com/astaxie/beego"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -67,13 +69,13 @@ func (b Blog) Get_by_id(id string) *Blog {
 }
 
 func (b Blog) Get_list(page int, per_page int) ([]Blog, int) {
-	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	if err != nil {
-		panic(err)
-	}
+	//	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
+	//	if err != nil {
+	//		panic(err)
+	//	}
 
-	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
+	//	defer session.Close()
+	//	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
 
 	var result []Blog
@@ -90,6 +92,18 @@ func (b Blog) Get_list(page int, per_page int) ([]Blog, int) {
 	//	fmt.Println(result)
 
 	return result, total
+}
+
+func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
+	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
+	if err != nil {
+		panic(err)
+	}
+
+	defer session.Close()
+	var res map[interface{}]interface{}
+
+	return res
 }
 
 func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {

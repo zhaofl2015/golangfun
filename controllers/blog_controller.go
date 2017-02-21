@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"hello/models"
 
 	"github.com/astaxie/beego"
@@ -57,7 +56,7 @@ func (c *BlogController) List() {
 	result, total := blog_inst.Get_list(page, per_page)
 	data := blog_inst.ChangeToMap(result)
 	c.Data["data"] = data
-	fmt.Println(data[0])
+	//	fmt.Println(data[0])
 	c.Data["total"] = total
 	c.Data["page"] = page
 	c.Data["per_page"] = per_page

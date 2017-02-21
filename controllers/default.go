@@ -28,10 +28,12 @@ type MainController struct {
 
 func (c *MainController) Get() {
 
+	// 首页的最新blog的展示
 	blog_inst := models.Blog{}
 	blog := blog_inst.Get_newest_blog()
 
 	c.Data["Title"] = blog.Title
+	// 计算首页的预览的长度
 	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
 	if len([]rune(utils.RemoveHtmlTag(blog.Content))) < preview_count {
 		preview_count = len([]rune(utils.RemoveHtmlTag(blog.Content)))
@@ -39,7 +41,7 @@ func (c *MainController) Get() {
 	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(blog.Content))[:preview_count])
 	c.Data["Id"] = blog.Id
 	c.Data["NewUrl"] = "/getone?id=" + blog.Id.Hex()
-	//	c.Data["Author"] = blog.Author.Hex()
+
 	c.Data["Author"] = beego.AppConfig.String("author")
 
 	c.Data["Website"] = beego.AppConfig.String("website")

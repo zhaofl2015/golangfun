@@ -1,27 +1,108 @@
-{{template "base/base.html" .}}
+{{template "base/layout2.html" .}}
 
 {{define "head"}}
+	<title> Welcome to my blog </title>
+	<style>
+	.peopleCarouselImg img {
+	  width: auto;
+	  height: 500px;
+	  max-height: 500px;
+	}
+	.imageShowT img {
+		width: auto;
+		height: 230px;
+		max-height: 230px;
+	}
+	</style>
+	
 {{end}}
 
 {{define "body"}}
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item peopleCarouselImg active">
+	  <a href="/getone?id=58a86b1659acd10574104fbb">
+      <img src="http://img01.taopic.com/141114/318762-1411140J63541.jpg" class="img-responsive center-block peopleCarouselImg">
+	  </a>
+      <div class="carousel-caption">
+        beego blog
+      </div>
+    </div>
+    <div class="item peopleCarouselImg">
+	  <a href="/getone?id=58a86b1659acd10574104fbb">
+      <img src="http://image81.360doc.com/DownloadImg/2015/01/2911/49614670_9.jpg" alt="pic2" class="img-responsive center-block peopleCarouselImg">
+	  </a>
+      <div class="carousel-caption">
+        second page
+      </div>
+    </div>
+    <div class="item peopleCarouselImg">
+	  <a href="/getone?id=58a86b1659acd10574104fbb">
+      <img src="http://pic.58pic.com/58pic/15/39/85/74C58PICgy4_1024.jpg" alt="pic3" class="img-responsive center-block peopleCarouselImg">
+	  </a>
+      <div class="carousel-caption">
+        third page
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
 
 <div class="jumbotron">
   <h1>{{.Title}}</h1>
   <p>{{.Content}} ...</p>
   <p><a class="btn btn-primary btn-lg" href={{.NewUrl}} role="button">Learn more</a></p>
-  <p>message from {{.Author}}</p>
 </div>
-<!--<div class="row">
-  <div class="col-md-8"><img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9" width="100%"></div>
-  <div class="col-md-4">
+
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail imageShowT">
+      <img src="http://article.fd.zol-img.com.cn/t_s501x2000/g1/M07/0C/0D/Cg-4jlOpQWqIWQiKAAFW5Id4I7oAAOjOwA7-HMAAVb8853.jpg" alt="..." class="imageShowT">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>啊阿斯顿发发阿萨德发的飞洒发达</p>
+        <p><a href="http://img.club.pchome.net/kdsarticle/2014/03small/18/bfcbc9c9a0d3cc8b57c1523af28193cc_1000x750.jpg" class="btn btn-primary" role="button">查看</a> <a href="#" class="btn btn-default" role="button">换一个</a></p>
       </div>
-</div>-->
-{{end}}
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail imageShowT">
+      <img src="http://img.club.pchome.net/kdsarticle/2014/03small/18/bfcbc9c9a0d3cc8b57c1523af28193cc_1000x750.jpg" alt="..." class="imageShowT">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>啊阿斯顿sdfasdfafa洒发达</p>
+        <p><a href="http://img.club.pchome.net/kdsarticle/2014/03small/18/bfcbc9c9a0d3cc8b57c1523af28193cc_1000x750.jpg" class="btn btn-primary" role="button">查看</a> <a href="#" class="btn btn-default" role="button">换一个</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail imageShowT">
+      <img src="http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1206/02/c3/11848625_11848625_1338612793843.jpg" alt="..." class="imageShowT">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>啊阿斯顿发发阿萨德发的飞洒发达</p>
+        <p><a href="http://img.club.pchome.net/kdsarticle/2014/03small/18/bfcbc9c9a0d3cc8b57c1523af28193cc_1000x750.jpg" class="btn btn-primary" role="button">查看</a> <a href="#" class="btn btn-default" role="button">换一个</a></p>
+      </div>
+    </div>
+  </div>
+</div>
 
-{{define "left-side"}}
-<img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9" width="100%">
-{{end}}
-
-{{define "right-side"}}
-{{template "base/right.html" .}}
 {{end}}
