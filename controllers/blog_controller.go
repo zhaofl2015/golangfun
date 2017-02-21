@@ -26,7 +26,7 @@ func (c *BlogController) Get() {
 	flash := beego.ReadFromRequest(&c.Controller)
 	_, _ = flash.Data["notice"]
 	blog_inst := models.Blog{}
-	blog := blog_inst.Get_newest_blog()
+	blog := blog_inst.GetNewestBlog()
 
 	c.Data["Title"] = blog.Title
 	c.Data["Content"] = blog.Content
@@ -35,10 +35,10 @@ func (c *BlogController) Get() {
 }
 
 // 根据id查找对应的blog
-func (c *BlogController) Get_by_id() {
+func (c *BlogController) GetById() {
 	id := c.GetString("id")
 	blog_inst := models.Blog{}
-	blog := blog_inst.Get_by_id(id)
+	blog := blog_inst.GetById(id)
 	c.Data["Title"] = blog.Title
 	c.Data["Content"] = blog.Content
 	c.Data["Id"] = blog.Id
@@ -53,7 +53,7 @@ func (c *BlogController) List() {
 	per_page := 10
 	blog_inst := models.Blog{}
 	//	fmt.Println(page, per_page)
-	result, total := blog_inst.Get_list(page, per_page)
+	result, total := blog_inst.GetList(page, per_page)
 	data := blog_inst.ChangeToMap(result)
 	c.Data["data"] = data
 	//	fmt.Println(data[0])

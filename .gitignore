@@ -23,4 +23,12 @@ _testmain.go
 *.test
 *.prof
 
+data
+
 .DS_Store
+
+
+
+
+# Attention!!!!  exe file should be ignore, but consider the other same name lib
+hello

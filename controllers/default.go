@@ -30,7 +30,7 @@ func (c *MainController) Get() {
 
 	// 首页的最新blog的展示
 	blog_inst := models.Blog{}
-	blog := blog_inst.Get_newest_blog()
+	blog := blog_inst.GetNewestBlog()
 
 	c.Data["Title"] = blog.Title
 	// 计算首页的预览的长度

@@ -1,14 +1,11 @@
 package models
 
 import (
-	"fmt"
 	"log"
 	"time"
 
-	"hello/models"
-
 	"github.com/astaxie/beego"
-	"gopkg.in/mgo.v2"
+	//	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -35,51 +32,46 @@ type Blog struct {
 	LastViewIP string        `json:"last_view_ip" bson:"last_view_ip"`
 }
 
-func (b Blog) Get_newest_blog() *Blog {
-	session, error := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	if error != nil {
-		panic(error)
-	}
+//func (ds *DataStore) blog_collection() *mgo.Collection {
+//	db := ds.session.DB(beego.AppConfig.String("mongodb"))
+//	return db.C(beego.AppConfig.String("mongoblogcollection"))
+//}
 
+func (b Blog) GetNewestBlog() *Blog {
+	session := Session()
 	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
 	result := Blog{}
-	error = c.Find(nil).Sort("-create_time").One(&result)
-	if error != nil {
-		log.Fatal(error)
+	err := c.Find(nil).Sort("-create_time").One(&result)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	return &result
 }
 
-func (b Blog) Get_by_id(id string) *Blog {
-	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
+func (b Blog) GetById(id string) *Blog {
+	session := Session()
+	defer session.Close()
+	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
+
+	result := Blog{}
+	c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&result)
+	return &result
+}
+
+func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
+	session := Session()
+	defer session.Close()
+	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
+	if c == nil {
+		panic("collection find failed")
+	}
+	var result []Blog
+	err := c.Find(bson.M{}).Sort("-_id").All(&result)
 	if err != nil {
 		panic(err)
 	}
-
-	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
-
-	result := Blog{}
-	err = c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&result)
-	return &result
-}
-
-func (b Blog) Get_list(page int, per_page int) ([]Blog, int) {
-	//	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	//	if err != nil {
-	//		panic(err)
-	//	}
-
-	//	defer session.Close()
-	//	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
-
-	var result []Blog
-	err = c.Find(bson.M{}).Sort("-_id").All(&result)
 	total := len(result)
 	left_side := per_page * (page - 1)
 	if left_side < total {
@@ -89,17 +81,12 @@ func (b Blog) Get_list(page int, per_page int) ([]Blog, int) {
 		}
 		result = result[left_side:right_side]
 	}
-	//	fmt.Println(result)
 
 	return result, total
 }
 
 func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
-	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	if err != nil {
-		panic(err)
-	}
-
+	session := Session()
 	defer session.Close()
 	var res map[interface{}]interface{}
 
@@ -107,13 +94,8 @@ func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 }
 
 func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
-	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	if err != nil {
-		panic(err)
-	}
-
+	session := Session()
 	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongobloguser"))
 
 	var res_list []map[interface{}]interface{}
@@ -121,9 +103,9 @@ func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
 	var user BlogUser
 
 	for _, blog := range blogs {
-		err = c.FindId(blog.Author).One(&user)
+		err := c.FindId(blog.Author).One(&user)
 		//		user.CreatedAt = time.Parse(user.CreatedAt, "2006-01-02 15:04:05")
-		fmt.Println(user)
+		//		fmt.Println(user)
 		if err != nil {
 			panic(err)
 		}
