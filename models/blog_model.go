@@ -1,11 +1,12 @@
 package models
 
 import (
-	"log"
 	"time"
 
 	"github.com/astaxie/beego"
 	//	"gopkg.in/mgo.v2"
+	"hello/utils"
+
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -44,9 +45,8 @@ func (b Blog) GetNewestBlog() *Blog {
 	result := Blog{}
 	err := c.Find(nil).Sort("-create_time").One(&result)
 	if err != nil {
-		log.Fatal(err)
+		utils.Logger.Critical("cannot find blog")
 	}
-
 	return &result
 }
 
@@ -61,11 +61,12 @@ func (b Blog) GetById(id string) *Blog {
 }
 
 func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
+	utils.Logger.Debug("getting the list")
 	session := Session()
 	defer session.Close()
 	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
 	if c == nil {
-		panic("collection find failed")
+		utils.Logger.Error("collection find failed")
 	}
 	var result []Blog
 	err := c.Find(bson.M{}).Sort("-_id").All(&result)
@@ -88,39 +89,38 @@ func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 	session := Session()
 	defer session.Close()
+	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongobloguser"))
+
 	var res map[interface{}]interface{}
+
+	var user BlogUser
+	err := c.FindId(blog.Author).One(&user)
+	if err != nil {
+		utils.Logger.Warn("cannot find user")
+	}
+
+	res := make(map[interface{}]interface{})
+	res["Id"] = blog.Id.Hex()
+	res["Title"] = blog.Title
+	res["Content"] = blog.Content
+	res["Comment"] = blog.Comment
+	res["Tags"] = blog.Tags
+	res["ViewCount"] = blog.ViewCount
+	res["Author"] = user.Username
+	res["Visible"] = blog.Visible
+	res["LastViewIP"] = blog.LastViewIP
+	res["CreateTime"] = blog.CreateTime
 
 	return res
 }
 
 func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
-	session := Session()
-	defer session.Close()
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongobloguser"))
-
 	var res_list []map[interface{}]interface{}
 
 	var user BlogUser
 
 	for _, blog := range blogs {
-		err := c.FindId(blog.Author).One(&user)
-		//		user.CreatedAt = time.Parse(user.CreatedAt, "2006-01-02 15:04:05")
-		//		fmt.Println(user)
-		if err != nil {
-			panic(err)
-		}
-		res := make(map[interface{}]interface{})
-		res["Id"] = blog.Id.Hex()
-		res["Title"] = blog.Title
-		res["Content"] = blog.Content
-		res["Comment"] = blog.Comment
-		res["Tags"] = blog.Tags
-		res["ViewCount"] = blog.ViewCount
-		res["Author"] = user.Username
-		res["Visible"] = blog.Visible
-		res["LastViewIP"] = blog.LastViewIP
-		res["CreateTime"] = blog.CreateTime
-		//		res["CreateTime"] = blog.CreateTime.Format("2006-01-02 15:04:05")
+		res := b.ChangeToMapOne(blog)
 		res_list = append(res_list, res)
 	}
 	return res_list
