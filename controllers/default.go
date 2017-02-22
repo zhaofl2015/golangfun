@@ -30,20 +30,28 @@ func (c *MainController) Get() {
 	blog_inst := models.Blog{}
 	// 展示所有的首页内容，走马灯，wall，橱窗
 	//	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
-	_, wall_blog, _ := blog_inst.GetBlogForFirstPage()
+	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
 
 	// 首页的最新blog的展示
 	//	blog := blog_inst.GetNewestBlog()
 
-	c.Data["Title"] = wall_blog.Title
-	// 计算首页的预览的长度
-	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
-	if len([]rune(utils.RemoveHtmlTag(wall_blog.Content))) < preview_count {
-		preview_count = len([]rune(utils.RemoveHtmlTag(wall_blog.Content)))
+	res_img_lst := GetFirstPageImages(7)
+
+	// wall 展示
+	c.Data["wall_blog"] = blog_inst.ChangeToMapOne(wall_blog)
+	c.Data["wall_blog"]["img_url"] = res_img_lst[3]
+
+	// 走马灯展示
+	c.Data["rotate_blog"] = blog_inst.ChangeToMap(rotate_blog)
+	for ind, img_url := range res_img_lst[:3] {
+		c.Data["rotate_blog"][ind]["img_url"] = img_url
 	}
-	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(wall_blog.Content))[:preview_count])
-	c.Data["Id"] = wall_blog.Id
-	c.Data["NewUrl"] = "/getone?id=" + wall_blog.Id.Hex()
+
+	// 橱窗展示
+	c.Data["window_blog"] = blog_inst.ChangeToMap(window_blog)
+	for ind, img_url := range res_img_lst[4:] {
+		c.Data["window_blog"][ind]["img_url"] = img_url
+	}
 
 	c.Data["Author"] = beego.AppConfig.String("author")
 
@@ -51,4 +59,11 @@ func (c *MainController) Get() {
 	c.Data["Email"] = beego.AppConfig.String("email")
 	c.TplName = "welcome.html"
 
+}
+
+func GetFirstPageImages(count int) []string {
+	// 找到对应的图片，用于展示
+	rand_img_url := utils.GetRandomImageLocal(count)
+	//	utils.Logger.Debug(strings.Join(rand_img_url, ","))
+	return rand_img_url
 }

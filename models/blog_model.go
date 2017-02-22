@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 	"hello/utils"
-	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -112,6 +111,22 @@ func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 	res["Visible"] = blog.Visible
 	res["LastViewIP"] = blog.LastViewIP
 	res["CreateTime"] = blog.CreateTime
+	res["PureContent"] = utils.RemoveHtmlTag(blog.Content)
+	res["NewUrl"] = "/getone?id=" + blog.Id.Hex()
+
+	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
+	var pure_content []rune
+	if content_string, ok := res["PureContent"].(string); ok {
+		pure_content = []rune(content_string)
+	} else {
+		panic(errors.New("cannot transfer to string"))
+	}
+
+	if len(pure_content) < preview_count {
+		preview_count = len(pure_content)
+	}
+
+	res["Summary"] = string(pure_content[:preview_count])
 
 	return res
 }
@@ -141,10 +156,6 @@ func (b Blog) GetBlogForFirstPage() (rotate []Blog, wall Blog, window []Blog) {
 	if err != nil {
 		utils.Logger.Error("can not find blog")
 	}
-
-	// 找到对应的图片，用于展示
-	rand_img_url := utils.GetRandomImageLocal(count)
-	utils.Logger.Debug(strings.Join(rand_img_url, ","))
 
 	if len(blog_list) < count {
 		panic(errors.New("no enough blogs"))

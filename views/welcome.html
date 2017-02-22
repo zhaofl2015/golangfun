@@ -29,7 +29,16 @@
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
-    <div class="item peopleCarouselImg active">
+	{{range .rotate_blog}}
+	<div class="item peopleCarouselImg">
+	  <a href={{.rotate_blog.NewUrl}}>
+	  <img src={{.rotate_blog.img_url}} class="img-responsive center-block peopleCarouselImg">
+	  </a>
+	  <div class="carousel-caption">
+	     {{.rotate_blog.Title}}
+	  </div>
+	</div>
+    <!--<div class="item peopleCarouselImg active">
 	  <a href="/getone?id=58a86b1659acd10574104fbb">
       <img src="http://img01.taopic.com/141114/318762-1411140J63541.jpg" class="img-responsive center-block peopleCarouselImg">
 	  </a>
@@ -52,7 +61,8 @@
       <div class="carousel-caption">
         third page
       </div>
-    </div>
+    </div>-->
+	{{end}}
   </div>
 
   <!-- Controls -->
@@ -67,9 +77,9 @@
 </div>
 
 <div class="jumbotron">
-  <h1>{{.Title}}</h1>
-  <p>{{.Content}} ...</p>
-  <p><a class="btn btn-primary btn-lg" href={{.NewUrl}} role="button">Learn more</a></p>
+  <h1>{{.wall_blog.Title}}</h1>
+  <p>{{.wall_blog.Summary}} ...</p>
+  <p><a class="btn btn-primary btn-lg" href={{.wall_blog.NewUrl}} role="button">Learn more</a></p>
 </div>
 
 <div class="row">
