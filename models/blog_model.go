@@ -38,6 +38,7 @@ type Blog struct {
 //	return db.C(beego.AppConfig.String("mongoblogcollection"))
 //}
 
+// 获取最新的日志
 func (b Blog) GetNewestBlog() *Blog {
 	session := Session()
 	defer session.Close()
@@ -50,6 +51,7 @@ func (b Blog) GetNewestBlog() *Blog {
 	return &result
 }
 
+//根据id获取日志
 func (b Blog) GetById(id string) *Blog {
 	session := Session()
 	defer session.Close()
@@ -60,6 +62,7 @@ func (b Blog) GetById(id string) *Blog {
 	return &result
 }
 
+// 批量获取日志
 func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 	utils.Logger.Debug("getting the list")
 	session := Session()
@@ -86,12 +89,11 @@ func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 	return result, total
 }
 
+// 将blog转换为map
 func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 	session := Session()
 	defer session.Close()
 	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongobloguser"))
-
-	var res map[interface{}]interface{}
 
 	var user BlogUser
 	err := c.FindId(blog.Author).One(&user)
@@ -114,10 +116,9 @@ func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 	return res
 }
 
+// 批量将blog转换为map格式
 func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
 	var res_list []map[interface{}]interface{}
-
-	var user BlogUser
 
 	for _, blog := range blogs {
 		res := b.ChangeToMapOne(blog)
