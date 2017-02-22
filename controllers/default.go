@@ -27,20 +27,23 @@ type MainController struct {
 //}
 
 func (c *MainController) Get() {
+	blog_inst := models.Blog{}
+	// 展示所有的首页内容，走马灯，wall，橱窗
+	//	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
+	_, wall_blog, _ := blog_inst.GetBlogForFirstPage()
 
 	// 首页的最新blog的展示
-	blog_inst := models.Blog{}
-	blog := blog_inst.GetNewestBlog()
+	//	blog := blog_inst.GetNewestBlog()
 
-	c.Data["Title"] = blog.Title
+	c.Data["Title"] = wall_blog.Title
 	// 计算首页的预览的长度
 	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
-	if len([]rune(utils.RemoveHtmlTag(blog.Content))) < preview_count {
-		preview_count = len([]rune(utils.RemoveHtmlTag(blog.Content)))
+	if len([]rune(utils.RemoveHtmlTag(wall_blog.Content))) < preview_count {
+		preview_count = len([]rune(utils.RemoveHtmlTag(wall_blog.Content)))
 	}
-	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(blog.Content))[:preview_count])
-	c.Data["Id"] = blog.Id
-	c.Data["NewUrl"] = "/getone?id=" + blog.Id.Hex()
+	c.Data["Content"] = string([]rune(utils.RemoveHtmlTag(wall_blog.Content))[:preview_count])
+	c.Data["Id"] = wall_blog.Id
+	c.Data["NewUrl"] = "/getone?id=" + wall_blog.Id.Hex()
 
 	c.Data["Author"] = beego.AppConfig.String("author")
 

@@ -1,12 +1,12 @@
 package models
 
 import (
+	"errors"
+	"hello/utils"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
-	//	"gopkg.in/mgo.v2"
-	"hello/utils"
-
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -33,16 +33,17 @@ type Blog struct {
 	LastViewIP string        `json:"last_view_ip" bson:"last_view_ip"`
 }
 
-//func (ds *DataStore) blog_collection() *mgo.Collection {
-//	db := ds.session.DB(beego.AppConfig.String("mongodb"))
-//	return db.C(beego.AppConfig.String("mongoblogcollection"))
-//}
+var (
+	BlogDBName         = beego.AppConfig.String("mongodb")
+	BlogCollection     = beego.AppConfig.String("mongoblogcollection")
+	BlogUserCollection = beego.AppConfig.String("mongobloguser")
+)
 
 // 获取最新的日志
 func (b Blog) GetNewestBlog() *Blog {
-	session := Session()
-	defer session.Close()
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogCollection)
 	result := Blog{}
 	err := c.Find(nil).Sort("-create_time").One(&result)
 	if err != nil {
@@ -53,9 +54,9 @@ func (b Blog) GetNewestBlog() *Blog {
 
 //根据id获取日志
 func (b Blog) GetById(id string) *Blog {
-	session := Session()
-	defer session.Close()
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogCollection)
 
 	result := Blog{}
 	c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&result)
@@ -65,12 +66,11 @@ func (b Blog) GetById(id string) *Blog {
 // 批量获取日志
 func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 	utils.Logger.Debug("getting the list")
-	session := Session()
-	defer session.Close()
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongoblogcollection"))
-	if c == nil {
-		utils.Logger.Error("collection find failed")
-	}
+
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogCollection)
+
 	var result []Blog
 	err := c.Find(bson.M{}).Sort("-_id").All(&result)
 	if err != nil {
@@ -91,9 +91,9 @@ func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 
 // 将blog转换为map
 func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
-	session := Session()
-	defer session.Close()
-	c := session.DB(beego.AppConfig.String("mongodb")).C(beego.AppConfig.String("mongobloguser"))
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogUserCollection)
 
 	var user BlogUser
 	err := c.FindId(blog.Author).One(&user)
@@ -125,4 +125,30 @@ func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
 		res_list = append(res_list, res)
 	}
 	return res_list
+}
+
+// 获取首页需要的blog：走马灯，大板块，橱窗
+func (b Blog) GetBlogForFirstPage() (rotate []Blog, wall Blog, window []Blog) {
+	//	found_ids := make(map[bson.ObjectId]int)
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogCollection)
+
+	count := 7
+	var blog_list []Blog
+	iter := c.Find(nil).Limit(count).Iter()
+	err := iter.All(&blog_list)
+	if err != nil {
+		utils.Logger.Error("can not find blog")
+	}
+
+	// 找到对应的图片，用于展示
+	rand_img_url := utils.GetRandomImageLocal(count)
+	utils.Logger.Debug(strings.Join(rand_img_url, ","))
+
+	if len(blog_list) < count {
+		panic(errors.New("no enough blogs"))
+	}
+
+	return blog_list[:3], blog_list[3], blog_list[4:]
 }

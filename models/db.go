@@ -5,37 +5,37 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-//type DataStore struct {
-//	session *mgo.Session
-//}
+type DataStore struct {
+	session *mgo.Session
+}
 
 //var ds DataStore
-
 var (
 	session *mgo.Session
 )
 
-func Session() *mgo.Session {
-	if session == nil {
-		var err error
-		session, err = mgo.Dial(beego.AppConfig.String("mongoaddr"))
-		if err != nil {
-			panic(err)
-		}
-		session.SetMode(mgo.Monotonic, true)
+func init() {
+	var err error
+	session, err = mgo.Dial(beego.AppConfig.String("mongoaddr"))
+	if err != nil {
+		panic(err)
 	}
-	return session.Clone()
 }
 
-func Init() {
-	//	ds = DataStore{}
-	//	session, err := mgo.Dial(beego.AppConfig.String("mongoaddr"))
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	ds.session = session
+// Close mgo.Session
+func (d *DataStore) Close() {
+	d.session.Close()
 }
 
-//func (s *DataStore) dataStore() *DataStore {
-//	return &DataStore{s.session.Copy()}
-//}
+// create a new datastore for each http request
+func NewDataStore() *DataStore {
+	ds := &DataStore{
+		session: session.Copy(),
+	}
+	return ds
+}
+
+// get collection with dbname and collection name
+func (d *DataStore) C(dbname string, colname string) *mgo.Collection {
+	return d.session.DB(dbname).C(colname)
+}
