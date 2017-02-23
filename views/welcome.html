@@ -29,39 +29,19 @@
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
-	{{range .rotate_blog}}
+	{{range $index, $elem := .rotate_blog}}
+	{{if eq $index 0}}
+	<div class="item peopleCarouselImg active">
+	{{else}}
 	<div class="item peopleCarouselImg">
-	  <a href={{.rotate_blog.NewUrl}}>
-	  <img src={{.rotate_blog.img_url}} class="img-responsive center-block peopleCarouselImg">
+	{{end}}
+	  <a href={{.NewUrl}}>
+	  <img src={{.img_url}} class="img-responsive center-block peopleCarouselImg">
 	  </a>
 	  <div class="carousel-caption">
-	     {{.rotate_blog.Title}}
+	     {{.Title}}
 	  </div>
 	</div>
-    <!--<div class="item peopleCarouselImg active">
-	  <a href="/getone?id=58a86b1659acd10574104fbb">
-      <img src="http://img01.taopic.com/141114/318762-1411140J63541.jpg" class="img-responsive center-block peopleCarouselImg">
-	  </a>
-      <div class="carousel-caption">
-        beego blog
-      </div>
-    </div>
-    <div class="item peopleCarouselImg">
-	  <a href="/getone?id=58a86b1659acd10574104fbb">
-      <img src="http://image81.360doc.com/DownloadImg/2015/01/2911/49614670_9.jpg" alt="pic2" class="img-responsive center-block peopleCarouselImg">
-	  </a>
-      <div class="carousel-caption">
-        second page
-      </div>
-    </div>
-    <div class="item peopleCarouselImg">
-	  <a href="/getone?id=58a86b1659acd10574104fbb">
-      <img src="http://pic.58pic.com/58pic/15/39/85/74C58PICgy4_1024.jpg" alt="pic3" class="img-responsive center-block peopleCarouselImg">
-	  </a>
-      <div class="carousel-caption">
-        third page
-      </div>
-    </div>-->
 	{{end}}
   </div>
 
@@ -83,7 +63,19 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-6 col-md-4">
+  {{range .window_blog}}
+	<div class="col-sm-6 col-md-4">
+    	<div class="thumbnail imageShowT">
+			<img src={{.img_url}} class="imageShowT">
+			<div class="caption">
+				<h3>{{.Title}}</h3>
+				<p>{{.Summary}}</p>
+				<p><a href={{.NewUrl}} class="btn btn-primary" role="button">查看</a> <a href="#" class="btn btn-default" role="button">换一个</a></p>
+			</div>
+		</div>
+	</div>
+  {{end}}
+  <!--<div class="col-sm-6 col-md-4">
     <div class="thumbnail imageShowT">
       <img src="http://article.fd.zol-img.com.cn/t_s501x2000/g1/M07/0C/0D/Cg-4jlOpQWqIWQiKAAFW5Id4I7oAAOjOwA7-HMAAVb8853.jpg" alt="..." class="imageShowT">
       <div class="caption">
@@ -112,7 +104,7 @@
         <p><a href="http://img.club.pchome.net/kdsarticle/2014/03small/18/bfcbc9c9a0d3cc8b57c1523af28193cc_1000x750.jpg" class="btn btn-primary" role="button">查看</a> <a href="#" class="btn btn-default" role="button">换一个</a></p>
       </div>
     </div>
-  </div>
+  </div>-->
 </div>
 
 {{end}}

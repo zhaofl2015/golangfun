@@ -6,5 +6,5 @@ import (
 
 var (
 	RootPath       = beego.AppConfig.String("root_path")
-	FirstImagePath = RootPath + beego.AppConfig.String("static_img_first")
+	FirstImagePath = beego.AppConfig.String("static_img_first")
 )

@@ -47,6 +47,7 @@ func (c *MainController) Get() {
 	rotate_blog_map := blog_inst.ChangeToMap(rotate_blog)
 	for ind, img_url := range res_img_lst[:3] {
 		rotate_blog_map[ind]["img_url"] = img_url
+		utils.Logger.Debug(img_url)
 	}
 	c.Data["rotate_blog"] = rotate_blog_map
 

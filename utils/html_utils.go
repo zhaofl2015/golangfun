@@ -27,5 +27,9 @@ func RemoveHtmlTag(content string) string {
 	re, _ = regexp.Compile("\\s{2,}")
 	src = re.ReplaceAllString(src, "\n")
 
+	// 去除&nbsp;符号
+	re, _ = regexp.Compile("&nbsp;")
+	src = re.ReplaceAllString(src, " ")
+
 	return src
 }

@@ -13,7 +13,7 @@ func GetRandomImageLocal(count int) []string {
 
 	var ret_files []string
 
-	files, err := ioutil.ReadDir(FirstImagePath)
+	files, err := ioutil.ReadDir(RootPath + FirstImagePath)
 	if err != nil {
 		panic(errors.New("No Such File or Directory"))
 	}
