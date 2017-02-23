@@ -89,7 +89,7 @@ func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 }
 
 // 将blog转换为map
-func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
+func (b Blog) ChangeToMapOne(blog Blog) map[string]interface{} {
 	ds := NewDataStore()
 	defer ds.Close()
 	c := ds.C(BlogDBName, BlogUserCollection)
@@ -100,7 +100,7 @@ func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 		utils.Logger.Warn("cannot find user")
 	}
 
-	res := make(map[interface{}]interface{})
+	res := make(map[string]interface{})
 	res["Id"] = blog.Id.Hex()
 	res["Title"] = blog.Title
 	res["Content"] = blog.Content
@@ -132,8 +132,8 @@ func (b Blog) ChangeToMapOne(blog Blog) map[interface{}]interface{} {
 }
 
 // 批量将blog转换为map格式
-func (b Blog) ChangeToMap(blogs []Blog) []map[interface{}]interface{} {
-	var res_list []map[interface{}]interface{}
+func (b Blog) ChangeToMap(blogs []Blog) []map[string]interface{} {
+	var res_list []map[string]interface{}
 
 	for _, blog := range blogs {
 		res := b.ChangeToMapOne(blog)

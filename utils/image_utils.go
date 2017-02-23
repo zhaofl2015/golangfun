@@ -23,7 +23,7 @@ func GetRandomImageLocal(count int) []string {
 	}
 
 	rand.Seed(int64(time.Now().Second()))
-	index_lst := rand.Perm(len(ret_files))[:count+1]
+	index_lst := rand.Perm(len(ret_files))[:count]
 
 	var tmp []string
 

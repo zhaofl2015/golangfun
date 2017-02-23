@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	//	"fmt"
 	"hello/models"
 	"hello/utils"
@@ -29,7 +30,6 @@ type MainController struct {
 func (c *MainController) Get() {
 	blog_inst := models.Blog{}
 	// 展示所有的首页内容，走马灯，wall，橱窗
-	//	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
 	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
 
 	// 首页的最新blog的展示
@@ -38,23 +38,28 @@ func (c *MainController) Get() {
 	res_img_lst := GetFirstPageImages(7)
 
 	// wall 展示
-	c.Data["wall_blog"] = blog_inst.ChangeToMapOne(wall_blog)
-	c.Data["wall_blog"]["img_url"] = res_img_lst[3]
+
+	wall_blog_map := blog_inst.ChangeToMapOne(wall_blog)
+	wall_blog_map["img_url"] = res_img_lst[3]
+	c.Data["wall_blog"] = wall_blog_map
 
 	// 走马灯展示
-	c.Data["rotate_blog"] = blog_inst.ChangeToMap(rotate_blog)
+	rotate_blog_map := blog_inst.ChangeToMap(rotate_blog)
 	for ind, img_url := range res_img_lst[:3] {
-		c.Data["rotate_blog"][ind]["img_url"] = img_url
+		rotate_blog_map[ind]["img_url"] = img_url
 	}
+	c.Data["rotate_blog"] = rotate_blog_map
 
 	// 橱窗展示
-	c.Data["window_blog"] = blog_inst.ChangeToMap(window_blog)
+	window_blog_map := blog_inst.ChangeToMap(window_blog)
+	utils.Logger.Debug(fmt.Sprintf("redundant length : %d", len(res_img_lst[4:])))
 	for ind, img_url := range res_img_lst[4:] {
-		c.Data["window_blog"][ind]["img_url"] = img_url
+		utils.Logger.Debug(fmt.Sprintf("ind %d value %s", ind, img_url))
+		window_blog_map[ind]["img_url"] = img_url
 	}
+	c.Data["window_blog"] = window_blog_map
 
 	c.Data["Author"] = beego.AppConfig.String("author")
-
 	c.Data["Website"] = beego.AppConfig.String("website")
 	c.Data["Email"] = beego.AppConfig.String("email")
 	c.TplName = "welcome.html"
