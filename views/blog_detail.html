@@ -1,0 +1,43 @@
+{{template "base/base.html" .}}
+
+{{define "head"}}
+<title>${ .Title}</title>
+{{end}}
+
+
+<script type="text/javascript">
+var vm = new Vue({
+  el: '#app',
+  delimiters: ['${', '}'],
+  data: {
+	Title: 'default title',
+	Content: 'default content',
+	Id: 'default id'
+  }
+});
+
+Vue.http.get('/news-2').then(function(response) {
+			return response.json()
+		}).then(function(json) {
+			vm.title = json.Title;
+			vm.content = json.Content;
+			vm.id = json.Id;
+		}).catch(function(e) {
+		  console.log('Have a error: ' + e)
+		});
+
+</script>
+{{define "body"}}
+{{end}}
+
+{{define "left-side"}}
+<div class="page-header"><h1>${ .Title}</h1></div>
+<div v-html="Content"></div>
+<img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9" width="30%">
+{{end}}
+
+{{define "right-side"}}
+{{template "base/right.html" .}}
+{{end}}
+
+

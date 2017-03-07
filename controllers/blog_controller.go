@@ -34,6 +34,27 @@ func (c *BlogController) Get() {
 	c.TplName = "news.html"
 }
 
+// 使用json来交互信息
+func (c *BlogController) GetNews() {
+	flash := beego.ReadFromRequest(&c.Controller)
+	_, _ = flash.Data["notice"]
+	blog_inst := models.Blog{}
+	blog := blog_inst.GetNewestBlog()
+
+	res := make(map[string]string)
+
+	res["Title"] = blog.Title
+	res["Content"] = blog.Content
+	res["Id"] = blog.Id.Hex()
+
+	c.Data["json"] = &res
+	c.ServeJSON()
+}
+
+func (c *BlogController) GetVue() {
+	c.TplName = "blog_detail.html"
+}
+
 // 根据id查找对应的blog
 func (c *BlogController) GetById() {
 	id := c.GetString("id")
