@@ -32,6 +32,8 @@ func (c *MainController) Get() {
 	// 展示所有的首页内容，走马灯，wall，橱窗
 	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
 
+	utils.Logger.Debug("runing at %d", beego.BConfig.Listen.HTTPPort)
+
 	// 首页的最新blog的展示
 	//	blog := blog_inst.GetNewestBlog()
 
