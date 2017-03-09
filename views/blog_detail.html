@@ -1,11 +1,115 @@
-{{template "base/base.html" .}}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!--<link rel="shortcut icon" href="/static/img/favicon.png" />-->
+		<meta name="author" content="fleago" />
+		<meta name="description" content="funfunfun" />
+		<meta name="keywords" content="Go, golang, beego">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> 防止移动端缩放，更像原生应用 -->
+		
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+		
+		<script src="/static/js/jquery-1.10.1.min.js"></script>
+		
+		<link rel="stylesheet" href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css">
+		<script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<link href="/static/plugin/editor.md/css/editormd.css" rel="stylesheet" />
+		<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/static/uno/style.css"/>
+		<link rel="stylesheet" href="/static/uno/prism.css"/>
+		<link rel="stylesheet" href="/static/plugin/editor.md/css/editormd.preview.css"/>
+		<script src="http://cdn.bootcss.com/vue/2.1.0/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+		
+		<style>
+		    pre[class*="language-"].line-numbers {
+		        padding-left: inherit;
+		    }
+		    .markdown-body pre code {
+		        display: block;
+		    }
+		    .editormd-preview-container, .editormd-html-preview {
+		        background-color: #f9f9f9;
+		    }
+		    .article header h3.title label {
+		        text-transform: uppercase;
+		        background-color: rgba(175, 178, 183, 0.7);
+		        border-radius: .25rem;
+		        transition: all 350ms;
+		        padding: .2rem .36rem;
+		        font-size: 1.55rem;
+		        color: #000;
+		        margin-left: -15px;
+		    }
+		    .article header h3.title label.label-primary,.article header h3.title label.label-info {
+		        background-color: rgba(0, 68, 204, .7);
+		        color: #f8f8f8;
+		    }
+		</style>
+	</head>
 
-{{define "head"}}
-<title>${ .Title}</title>
-{{end}}
-
-
-<script type="text/javascript">
+<!--<title>${ .Title}</title>-->
+	<body>
+	<div id='app'>
+		<div class="container">
+			<ul class="nav nav-pills">
+	  			<li role="presentation"><a href="/">Home</a></li>
+				<li role="presentation"><a href="/blog-list">Blogs</a></li>
+	<!--	  			<li role="presentation"><a href="/getone?id=58a7189359acd10574104fba">DisplayOne</a></li>-->
+				<li role="presentation"><a href="/news">News</a></li>
+				<li role="presentation"><a href="/logout">Logout</a></li>
+			</ul>
+		
+			<div class="row">
+	  			<div class="col-md-8">
+					<div class="page-header"><h1>${ Title }</h1></div>
+					<div v-html="Content"></div>
+					<img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9" width="30%">
+				</div>
+				
+	  			<div class="col-md-4">
+					<aside class="cover">
+					    <div class="profile">
+					        <hr class="divider long">
+					        <p class="bio">
+					           雾霾天戴口罩
+					        </p>
+					        <hr class="divider short">
+					        <div class="navigation">
+					            <ul class="nav">
+					                <li role="presentation" class="active">
+					                    <a href="/">首页
+					                    </a>
+					                </li>
+					                <li role="presentation" class="">
+					                    <a href="/blog-list">博客
+					                    </a>
+					                </li>
+					                <li role="presentation" class="">
+					                    <a href="/news">最新
+					                    </a>
+					                </li>
+					            </ul>
+					        </div>
+					    </div>
+					</aside>
+	      		</div>
+			</div>
+		</div>
+		<footer id="footer">
+		    <div class="container text-center">
+		        <p class="left">
+		           &copy; 2017 pichome
+		        </p>
+		        <p class="right">fleago@163.com. Theme by Uno.
+		        </p>
+		    </div>
+		</footer>
+	</div>
+	<script type="text/javascript">
 var vm = new Vue({
   el: '#app',
   delimiters: ['${', '}'],
@@ -22,22 +126,18 @@ Vue.http.get('/news-2').then(function(response) {
 			vm.title = json.Title;
 			vm.content = json.Content;
 			vm.id = json.Id;
+			console.log('doing well')
 		}).catch(function(e) {
 		  console.log('Have a error: ' + e)
 		});
 
 </script>
-{{define "body"}}
-{{end}}
+	</body>
 
-{{define "left-side"}}
-<div class="page-header"><h1>${ .Title}</h1></div>
-<div v-html="Content"></div>
-<img src="https://drscdn.500px.org/photo/197727369/q%3D80_m%3D1000/a0b25d7c3be6bd023f9d811048a17cf9" width="30%">
-{{end}}
+</html>
 
-{{define "right-side"}}
-{{template "base/right.html" .}}
-{{end}}
+
+
+
 
 
