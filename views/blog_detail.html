@@ -123,9 +123,9 @@ var vm = new Vue({
 Vue.http.get('/news-2').then(function(response) {
 			return response.json()
 		}).then(function(json) {
-			vm.title = json.Title;
-			vm.content = json.Content;
-			vm.id = json.Id;
+			vm.Title = json.Title;
+			vm.Content = json.Content;
+			vm.Id = json.Id;
 			console.log('doing well')
 		}).catch(function(e) {
 		  console.log('Have a error: ' + e)
