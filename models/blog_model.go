@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"hello/utils"
+	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -162,4 +164,34 @@ func (b Blog) GetBlogForFirstPage() (rotate []Blog, wall Blog, window []Blog) {
 	}
 
 	return blog_list[:3], blog_list[3], blog_list[4:]
+}
+
+// 换一些非指定id中的博客
+func (b Blog) ChangeSome(ids []string, count int) []Blog {
+	ds := NewDataStore()
+	defer ds.Close()
+	c := ds.C(BlogDBName, BlogCollection)
+
+	var other []Blog
+	var ids_f []bson.ObjectId
+	for _, id := range ids {
+		ids_f = append(ids_f, bson.ObjectIdHex(id))
+	}
+
+	utils.Logger.Debug("find all blogs not in %s", strings.Join(ids, ","))
+
+	total_blogs_count, _ := c.Find(nil).Count()
+
+	var skip_num int
+
+	if total_blogs_count > count {
+		skip_num = rand.Intn(total_blogs_count - count)
+	}
+
+	iter := c.Find(bson.M{"_id": bson.M{"$nin": ids_f}}).Skip(skip_num).Limit(count).Iter()
+	err := iter.All(&other)
+	if err != nil {
+		utils.Logger.Error("can not found enough blog")
+	}
+	return other
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"hello/models"
+	"hello/utils"
 
 	"github.com/astaxie/beego"
 )
@@ -53,6 +54,23 @@ func (c *BlogController) GetNews() {
 
 func (c *BlogController) GetVue() {
 	c.TplName = "blog_detail.html"
+}
+
+func (c *BlogController) ChangeOne() {
+	id := c.GetString("id")
+	blog_inst := models.Blog{}
+	blogs := blog_inst.ChangeSome([]string{id}, 1)
+	utils.Logger.Debug("find %d blog", len(blogs))
+	blog := blogs[0]
+
+	res := make(map[string]string)
+
+	res["Title"] = blog.Title
+	res["Content"] = blog.Content
+	res["Id"] = blog.Id.Hex()
+
+	c.Data["json"] = &res
+	c.ServeJSON()
 }
 
 // 根据id查找对应的blog
