@@ -1,7 +1,7 @@
 <template id='navi'>
     <div class="list-group">
-    	<a class="list-group-item" v-link="{ path: '/'}">Home</a>
-    	<a class="list-group-item" v-link="{ path: '/about'}">About</a>
+    	<router-link to='/'>Home</router-link>
+    	<router-link to='/detail'>Detail</router-link>
     </div>
 </template>
 
