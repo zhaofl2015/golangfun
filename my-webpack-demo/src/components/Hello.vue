@@ -1,5 +1,22 @@
 <template>
   <div class="hello">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-example-generic"  v-for="(blog, index) in rotate_blog" v-bind:data-slide-to="index" v-bind:class="activeNumber === index ? 'active': ''"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+          <div  v-for="(blog, index) in rotate_blog" v-bind:class="activeNumber === index? 'item peopleCarouselImg active': 'item peopleCarouselImg'">
+            <router-link to="/detail">
+              <img :src="blog.img_url" class="img-responsive center-block peopleCarouselImg">
+            </router-link>
+            <div class="carousel-caption">{{blog.Title}}</div>
+          </div>
+        </div>
+    </div>
+
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -23,9 +40,22 @@
 <script>
 export default {
   name: 'hello',
-  data () {
+  mounted: function () {
+    this.$http.post('http://127.0.0.1:8081/').then(
+      function(response) {
+        return response.json();
+      }
+    ).then(function(json){
+      this.rotate_blog = json.rotate_blog;
+      this.wall_blog = json.wall_blog;
+      this.window_blog = json.window_blog;
+    });
+  },
+  data: function () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      rotate_blog: [],
+      activeNumber: 0
     }
   }
 }
@@ -49,5 +79,16 @@ li {
 
 a {
   color: #42b983;
+}
+
+.peopleCarouselImg img {
+	  width: auto;
+	  height: 500px;
+	  max-height: 500px;
+}
+.imageShowT img {
+		width: auto;
+		height: 230px;
+		max-height: 230px;
 }
 </style>

@@ -3,7 +3,7 @@
     <!--img src="./assets/logo.png"-->
     <navi></navi>
     <router-view></router-view>
-    
+
   </div>
 </template>
 
