@@ -69,7 +69,18 @@ func (c *MainController) GetTmplate() {
 
 }
 
+// 跨域
+func (c *MainController) AllowCross() {
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")       //允许访问源
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS")    //允许post访问
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization") //header的类型
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Max-Age", "1728000")
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Ctx.ResponseWriter.Header().Set("content-type", "application/json") //返回数据格式是json
+}
+
 func (c *MainController) Get() {
+	c.AllowCross()
 	blog_inst := models.Blog{}
 	// 展示所有的首页内容，走马灯，wall，橱窗
 	rotate_blog, wall_blog, window_blog := blog_inst.GetBlogForFirstPage()
