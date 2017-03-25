@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"hello/models"
 	"hello/utils"
+	_ "strings"
 
 	"github.com/astaxie/beego"
 )
@@ -67,19 +69,17 @@ func (c *BlogController) GetVue() {
 }
 
 func (c *BlogController) ChangeOne() {
-	id := c.GetString("id")
+	ids := make([]string, 0, 13)
+	c.Ctx.Input.Bind(&ids, "ids")
+	fmt.Println(ids)
 	blog_inst := models.Blog{}
-	blogs := blog_inst.ChangeSome([]string{id}, 1)
+	blogs := blog_inst.ChangeSome(ids, 1)
 	utils.Logger.Debug("find %d blog", len(blogs))
 	blog := blogs[0]
 
-	res := make(map[string]string)
+	blog_map := blog_inst.ChangeToMapOne(blog)
 
-	res["Title"] = blog.Title
-	res["Content"] = blog.Content
-	res["Id"] = blog.Id.Hex()
-
-	c.Data["json"] = &res
+	c.Data["json"] = &blog_map
 	c.ServeJSON()
 }
 

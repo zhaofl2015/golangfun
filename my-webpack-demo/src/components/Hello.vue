@@ -43,7 +43,7 @@
               <h3>{{blog.Title}}</h3>
               <p>{{blog.Summary}}</p>
               <p><router-link v-bind:to="blog.Detail"><a class="btn btn-primary" role="button">查看</a></router-link>
-                <router-link to="/detail"><a class="btn btn-default" role="button">换一个</a></router-link></p>
+                <a class="btn btn-default" role="button" @click="changeOne(blog.Id)">换一个</a></p>
             </div>
           </div>
       </div>
@@ -55,21 +55,6 @@
 export default {
   name: 'hello',
   mounted: function () {
-//    var xhrCors = 'withCredentials' in new XMLHttpRequest();
-//    if(xhrCors) {
-//
-//      var xhr = new XMLHttpRequest();
-//      var data;
-//      xhr.open('GET', 'http://127.0.0.1:8081/');
-//      xhr.onload = function (e) {
-//        data = JSON.parse(to.response);
-//      };
-//      xhr.send();
-//      console.log(this);
-//      this.rotate_blog = data.rotate_blog;
-//      this.wall_blog = data.wall_blog;
-//      this.window_blog = data.window_blog;
-//    }
     this.$http.get('/hello').then(
       function(response) {
         return response.json();
@@ -78,6 +63,14 @@ export default {
       this.rotate_blog = json.rotate_blog;
       this.wall_blog = json.wall_blog;
       this.window_blog = json.window_blog;
+      this.all_ids = [];
+      for(var i=0;i < this.rotate_blog.length; i++) {
+        this.all_ids.push(this.rotate_blog[i].Id);
+      }
+      for(var i=0;i < this.window_blog.length; i++) {
+        this.all_ids.push(this.window_blog[i].Id);
+      }
+      this.all_ids.push(this.wall_blog.Id);
     });
   },
   data: function () {
@@ -90,19 +83,38 @@ export default {
         'Title': 'default title',
         'Summary': 'default summary'
       },
+      all_ids: [],
     }
   },
   methods: {
-    changeOne: function(event) {
-				this.$http.post('/change-one', {id: this.Id}).then(
+    changeOne: function(id) {
+      console.log(this.all_ids);
+      console.log(id);
+				this.$http.post('/change-one', {ids: this.all_ids, id:id}).then(
 					function(response){
 						return response.json();
 					}
 				).then(function(json){
-					vm.Title = json.Title;
-					vm.Content = json.Content;
-					vm.Id = json.Id;
-					vm.all_ids = [json.Id];
+          for(var i=0; i<this.window_blog.length;i ++) {
+            if(this.window_blog[i].Id == id) {
+//              this.window_blog[i] = json; // why does not work ? todo
+              this.window_blog[i].Id = json.Id;
+              this.window_blog[i].Content = json.Content;
+              this.window_blog[i].Title = json.Title;
+              this.window_blog[i].Summary = json.Summary;
+              this.window_blog[i].Detail = json.Detail;
+
+              break;
+            }
+          }
+
+          // replace all_ids info
+          for(var i=0;i<this.all_ids;i ++) {
+            if(this.all_ids[i] == id) {
+              this.all_ids[i] = json.Id;
+              break;
+            }
+          }
 				});
 			}
   }
