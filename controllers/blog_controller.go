@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"hello/models"
 	"hello/utils"
+	_ "strings"
 
 	"github.com/astaxie/beego"
 )
@@ -21,6 +23,16 @@ type BlogController struct {
 //	}
 //	this.Data["Username"] = sess_username
 //}
+
+// 跨域
+func (c *BlogController) AllowCross() {
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")       //允许访问源
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS")    //允许post访问
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization") //header的类型
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Max-Age", "1728000")
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Ctx.ResponseWriter.Header().Set("content-type", "application/json") //返回数据格式是json
+}
 
 // 获取最新的日志
 func (c *BlogController) Get() {
@@ -57,19 +69,17 @@ func (c *BlogController) GetVue() {
 }
 
 func (c *BlogController) ChangeOne() {
-	id := c.GetString("id")
+	ids := make([]string, 0, 13)
+	c.Ctx.Input.Bind(&ids, "ids")
+	fmt.Println(ids)
 	blog_inst := models.Blog{}
-	blogs := blog_inst.ChangeSome([]string{id}, 1)
+	blogs := blog_inst.ChangeSome(ids, 1)
 	utils.Logger.Debug("find %d blog", len(blogs))
 	blog := blogs[0]
 
-	res := make(map[string]string)
+	blog_map := blog_inst.ChangeToMapOne(blog)
 
-	res["Title"] = blog.Title
-	res["Content"] = blog.Content
-	res["Id"] = blog.Id.Hex()
-
-	c.Data["json"] = &res
+	c.Data["json"] = &blog_map
 	c.ServeJSON()
 }
 
@@ -82,6 +92,23 @@ func (c *BlogController) GetById() {
 	c.Data["Content"] = blog.Content
 	c.Data["Id"] = blog.Id
 	c.TplName = "news.html"
+}
+
+// 根据id 查找对应blog，json版
+func (c *BlogController) GetDetailById() {
+	//	id := c.GetString("id")
+	id := c.Ctx.Input.Param(":id")
+	blog_inst := models.Blog{}
+	blog := blog_inst.GetById(id)
+
+	res := make(map[string]string)
+
+	res["Title"] = blog.Title
+	res["Content"] = blog.Content
+	res["Id"] = blog.Id.Hex()
+
+	c.Data["json"] = &res
+	c.ServeJSON()
 }
 
 func (c *BlogController) List() {

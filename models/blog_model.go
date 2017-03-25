@@ -115,6 +115,7 @@ func (b Blog) ChangeToMapOne(blog Blog) map[string]interface{} {
 	res["CreateTime"] = blog.CreateTime
 	res["PureContent"] = utils.RemoveHtmlTag(blog.Content)
 	res["NewUrl"] = "/getone?id=" + blog.Id.Hex()
+	res["Detail"] = "/detail/" + blog.Id.Hex()
 
 	preview_count, _ := beego.AppConfig.Int("first_page_preview_count")
 	var pure_content []rune
