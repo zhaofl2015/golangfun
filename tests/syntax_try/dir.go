@@ -17,4 +17,11 @@ func main() {
 	}
 
 	fmt.Println(rand.Perm(5))
+
+	list := []int{1, 2, 3, 4, 5}
+	for ind, val := range list[3:] {
+		fmt.Println(ind, val)
+	}
+
+	fmt.Printf("%d", 4)
 }
