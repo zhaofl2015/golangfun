@@ -16,4 +16,4 @@ first_page_preview_count = 60
 email = fleago@163.com
 
 static_img_first = "/static/img/firstpage"
-root_path = "D:/Github/goproject/src/hello"
+root_path = "/Users/zhaofanglei/projects/goproject/src/hello"
