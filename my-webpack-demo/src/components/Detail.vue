@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout-content">
     <div class="row">
       <div class="col-md-8">
         <div class="page-header"><h1>{{ Title }}</h1></div>
@@ -100,5 +100,13 @@ li {
 
 a {
   color: #42b983;
+}
+
+.layout-content{
+      min-height: 200px;
+      margin: 15px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 4px;
 }
 </style>
