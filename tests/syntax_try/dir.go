@@ -17,4 +17,10 @@ func main() {
 	}
 
 	fmt.Println(rand.Perm(5))
+
+	ch := make(chan int, 1)
+
+	ch <- 1
+	value := <-ch
+	fmt.Println(value)
 }
