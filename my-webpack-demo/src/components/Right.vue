@@ -1,4 +1,4 @@
-<template id='right-aside'>
+<template id='right'>
   <aside class="cover">
     <div class="profile">
         <hr class="divider long">
@@ -13,7 +13,7 @@
                     </a>
                 </li>
                 <li role="presentation" class="">
-                    <a href="/blog-list">博客
+                    <a href="/blog-list-api">博客
                     </a>
                 </li>
                 <li role="presentation" class="">
