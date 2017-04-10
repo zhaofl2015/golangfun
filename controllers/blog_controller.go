@@ -128,3 +128,23 @@ func (c *BlogController) List() {
 	c.Data["per_page"] = per_page
 	c.TplName = "blog_list.html"
 }
+
+func (c *BlogController) ListApi() {
+	page, err := c.GetInt("page")
+	if err != nil {
+		page = 1
+	}
+
+	per_page := 10
+	blog_inst := models.Blog{}
+	result, total := blog_inst.GetList(page, per_page)
+	data := blog_inst.ChangeToMap(result)
+
+	res := make(map[string]interface{})
+	res["data"] = data
+	res["total"] = total
+	res["page"] = page
+	res["per_page"] = per_page
+	c.Data["json"] = &res
+	c.ServeJSON()
+}

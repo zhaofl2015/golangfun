@@ -23,7 +23,6 @@ export default {
     'bottom': Bottom
   }
 }
-
 </script>
 
 <style>

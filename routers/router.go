@@ -15,6 +15,7 @@ func init() {
 	beego.Router("/getone", &controllers.BlogController{}, "get:GetById")
 	beego.Router("/getdetail/:id", &controllers.BlogController{}, "get:GetDetailById")
 	beego.Router("/blog-list", &controllers.BlogController{}, "get:List")
+	beego.Router("/blog-list-api", &controllers.BlogController{}, "get:ListApi")
 	beego.Router("/login", &controllers.UserController{}, "get:Login;post:Post")
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/fun", &controllers.UserController{}, "get:Fun")

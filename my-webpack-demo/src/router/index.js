@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Detail from '@/components/Detail'
+import BlogList from '@/components/BlogList'
 
 var VueResource = require('vue-resource')
 
@@ -25,5 +26,10 @@ export default new Router({
       name: 'Detail',
       component: Detail
     },
+    {
+      path: '/blog-list-api',
+      name: 'Blogs',
+      component: BlogList
+    }
   ]
 })
