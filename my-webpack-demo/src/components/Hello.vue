@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <spinner :show="loading"></spinner>
+    <div id="carousel-example-generic" v-if="not_loading" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
           <li data-target="#carousel-example-generic"  v-for="(blog, index) in rotate_blog" v-bind:data-slide-to="index" v-bind:class="activeNumber === index ? 'active': ''"></li>
@@ -28,14 +29,14 @@
       </a>
     </div>
 
-    <div class="jumbotron">
+    <div class="jumbotron" v-if="not_loading" >
       <h1>{{wall_blog.Title}}</h1>
       <p>{{wall_blog.Summary}} ...</p>
       <p><router-link :to="wall_blog.Detail"><a class="btn btn-primary btn-lg" role="button">Learn more</a></router-link></p>
     </div>
 
 
-    <div class="row">
+    <div class="row" v-if="not_loading" >
       <div class="col-sm-6 col-md-4" v-for="(blog,index) in window_blog">
           <div class="thumbnail imageShowT">
             <img v-bind:src="blog.img_url" class="imageShowT">
@@ -52,41 +53,62 @@
 </template>
 
 <script>
+
+  import Spinner from './Spinner.vue'
+
 export default {
   name: 'hello',
-  mounted: function () {
-    this.$http.get('/hello').then(
-      function(response) {
-        return response.json();
-      }
-    ).then(function(json){
-      this.rotate_blog = json.rotate_blog;
-      this.wall_blog = json.wall_blog;
-      this.window_blog = json.window_blog;
-      this.all_ids = [];
-      for(var i=0;i < this.rotate_blog.length; i++) {
-        this.all_ids.push(this.rotate_blog[i].Id);
-      }
-      for(var i=0;i < this.window_blog.length; i++) {
-        this.all_ids.push(this.window_blog[i].Id);
-      }
-      this.all_ids.push(this.wall_blog.Id);
-    });
+
+  beforeMount: function() {
+    this.loadFirstPage()
   },
+
+  components: {
+    Spinner
+  },
+
+  computed: {
+    not_loading() {
+      return !this.loading;
+    }
+  },
+
   data: function () {
     return {
+      loading: false,
       msg: 'Welcome to Your Vue.js App',
       rotate_blog: [],
       activeNumber: 0,
       window_blog: [],
       wall_blog:{
-        'Title': 'default title',
-        'Summary': 'default summary'
+        'Title': '',
+        'Summary': ''
       },
-      all_ids: [],
+      all_ids: []
     }
   },
   methods: {
+    loadFirstPage: function() {
+      this.loading = true
+      this.$http.get('/hello').then(
+        function(response) {
+          return response.json();
+        }
+      ).then(function(json){
+        this.rotate_blog = json.rotate_blog;
+        this.wall_blog = json.wall_blog;
+        this.window_blog = json.window_blog;
+        this.all_ids = [];
+        for(var i=0;i < this.rotate_blog.length; i++) {
+          this.all_ids.push(this.rotate_blog[i].Id);
+        }
+        for(var i=0;i < this.window_blog.length; i++) {
+          this.all_ids.push(this.window_blog[i].Id);
+        }
+        this.all_ids.push(this.wall_blog.Id);
+        this.loading = false
+      });
+    },
     changeOne: function(id) {
       console.log(this.all_ids);
       console.log(id);

@@ -5,6 +5,7 @@ import (
 	"hello/models"
 	"hello/utils"
 	_ "strings"
+	//	"time"
 
 	"github.com/astaxie/beego"
 )
@@ -134,6 +135,8 @@ func (c *BlogController) ListApi() {
 	if err != nil {
 		page = 1
 	}
+
+	//	time.Sleep(2 * time.Second)
 
 	per_page := 10
 	blog_inst := models.Blog{}

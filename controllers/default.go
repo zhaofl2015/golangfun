@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	//	"time"
 	//	"fmt"
 	"hello/models"
 	"hello/utils"
@@ -80,6 +81,7 @@ func (c *MainController) AllowCross() {
 }
 
 func (c *MainController) Get() {
+	//	time.Sleep(2 * time.Second)
 	c.AllowCross()
 	blog_inst := models.Blog{}
 	// 展示所有的首页内容，走马灯，wall，橱窗

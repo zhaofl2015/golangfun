@@ -1,5 +1,6 @@
 <template>
   <div class="bloglist">
+    <spinner :show="loading"></spinner>
     <div class="row">
       <div class="col-md-8">
         <div class="article-single" v-for="blog in blogs">
@@ -35,26 +36,50 @@
 <script>
 
   import Right from './Right.vue'
+  import Spinner from './Spinner.vue'
 
   export default {
     name: 'bloglist',
-    mounted: function() {
-      this.$http.get('/blog-list-api').then(
-        function(response) {
-          return response.json();
-        }
-      ).then(function(json){
-        this.page = json.page;
-        this.per_page = json.per_page;
-        this.total = json.total;
-        this.blogs = json.data;
-      });
+
+    computed: {
+      page() {
+        return this.page;
+      },
+      maxPage () {
+        return (this.total + this.per_page - 1)/ this.per_page;
+      },
+      hasMore () {
+        return this.page < this.maxPage
+      }
+    },
+
+    beforeMount: function() {
+        this.loadBlogs(this.page)
+    },
+
+    methods: {
+      loadBlogs(to = this.page, from = -1) {
+        this.loading = true
+        this.$http.get('/blog-list-api').then(
+            function(response) {
+            return response.json();
+          }
+        ).then(function(json){
+          this.page = json.page;
+          this.per_page = json.per_page;
+          this.total = json.total;
+          this.blogs = json.data;
+          this.loading = false;
+        });
+      }
     },
     components: {
-      Right
+      Right,
+      Spinner
     },
     data: function() {
       return {
+        loading: false,
         page: 1,
         per_page: 10,
         total: 0,
