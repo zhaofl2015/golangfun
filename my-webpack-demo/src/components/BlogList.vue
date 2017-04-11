@@ -73,10 +73,12 @@
         });
       }
     },
+
     components: {
       Right,
       Spinner
     },
+    
     data: function() {
       return {
         loading: false,
