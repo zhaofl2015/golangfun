@@ -246,5 +246,20 @@ func (b Blog) GetMonths() []string {
 }
 
 func (bt BlogTag) GetTags() []interface{} {
+	
+	ds := NewDataStore()
+	defer ds.Close()
 
+	c := ds.C(BlogDBName, BlogTagCollection)
+	
+	tag_list := []BlogTag
+	
+	iter := c.Find(bson.M{"delete_time": nil}).Iter()
+	err := iter.All(&tag_list)
+	if err != nil {
+		utils.Logger.Warn("not found blogs in get tags")
+		return []interface{}
+	}
+	
+	
 }
