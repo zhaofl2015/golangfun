@@ -37,10 +37,20 @@ type Blog struct {
 	LastViewIP string        `json:"last_view_ip" bson:"last_view_ip"`
 }
 
+type BlogTag struct {
+	Id          bson.ObjectId `json:"id" bson:"_id"`
+	Name        string        `json:"name" bson:"name"`
+	Count       int           `json:"count" bson:"count"`
+	LastUseTime time.Time     `json:"last_use_time" bson:"last_use_time"`
+	CreateTime  time.Time     `json:"create_time" bson:"create_time"`
+	UpdateTime  time.Time     `json:"update_time" bson:"update_time"`
+}
+
 var (
 	BlogDBName         = beego.AppConfig.String("mongodb")
 	BlogCollection     = beego.AppConfig.String("mongoblogcollection")
 	BlogUserCollection = beego.AppConfig.String("mongobloguser")
+	BlogTagCollection  = beego.AppConfig.String("mongoblogtag")
 )
 
 // 获取最新的日志

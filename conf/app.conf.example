@@ -2,18 +2,18 @@ appname = hello
 httpport = 8081
 runmode = dev
 
-mongoaddr = "10.200.8.127:27017"
-#mongoaddr = "127.0.0.1:27017"
+mongoaddr = "127.0.0.1:27017"
 mongodb = "simpleblog"
 mongoblogcollection = "simpleblog"
 mongobloguser = "blog_user"
+mongoblogtag = "blogtag"
 
-website = fleago.blog.me
-author = fleago
+website = xxx.blog.me
+author = xxx
 # 首页预览的summary的长度
 first_page_preview_count = 60
 
-email = fleago@163.com
+email = xxx@163.com
 
 static_img_first = "/static/img/firstpage"
-root_path = "/Users/zhaofanglei/projects/goproject/src/hello"
+root_path = "/Users/xxx/projects/goproject/src/hello"
