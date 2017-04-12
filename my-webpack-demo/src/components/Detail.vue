@@ -36,10 +36,10 @@
       </div>
 
       <div class="col-md-3 col-sm-offset-1">
-        <right></right>
+        <archive></archive>
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -47,6 +47,7 @@
 <script>
 
   import Right from './Right.vue'
+  import Archive from './Archive'
 
 export default {
   name: 'detail',
@@ -66,7 +67,8 @@ export default {
     }
   },
   components: {
-    Right
+    Right,
+    Archive
   },
   methods: {
     change: function(event) {

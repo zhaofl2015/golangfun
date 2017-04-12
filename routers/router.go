@@ -8,6 +8,7 @@ import (
 
 func init() {
 	beego.Router("/hello", &controllers.MainController{}, "get:Get")
+
 	beego.Router("/news", &controllers.BlogController{}, "get:Get")
 	beego.Router("/news-2", &controllers.BlogController{}, "get:GetNews")
 	beego.Router("/vue", &controllers.BlogController{}, "get:GetVue")
@@ -16,6 +17,9 @@ func init() {
 	beego.Router("/getdetail/:id", &controllers.BlogController{}, "get:GetDetailById")
 	beego.Router("/blog-list", &controllers.BlogController{}, "get:List")
 	beego.Router("/blog-list-api", &controllers.BlogController{}, "get:ListApi")
+
+	beego.Router("/blog-months", &controllers.BlogController{}, "get:BlogMonths")
+
 	beego.Router("/login", &controllers.UserController{}, "get:Login;post:Post")
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/fun", &controllers.UserController{}, "get:Fun")

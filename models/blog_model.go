@@ -4,6 +4,7 @@ import (
 	"errors"
 	"hello/utils"
 	"math/rand"
+	"sort"
 	"strings"
 	"time"
 
@@ -200,4 +201,36 @@ func (b Blog) ChangeSome(ids []string, count int) []Blog {
 		utils.Logger.Error("can not found enough blog")
 	}
 	return other
+}
+
+// 查找所有的博客月份
+func (b Blog) GetMonths() []string {
+	ds := NewDataStore()
+	defer ds.Close()
+
+	c := ds.C(BlogDBName, BlogCollection)
+
+	var months []string
+	var months_dict map[string]bool
+	months_dict = make(map[string]bool)
+
+	var blogs []Blog
+
+	err := c.Find(bson.M{"delete_time": nil}).All(&blogs)
+
+	if err != nil {
+		utils.Logger.Warn("find no Month")
+	}
+
+	for _, blog := range blogs {
+		months_dict[blog.CreateTime.UTC().Format("2006-01")] = true
+	}
+
+	for month, _ := range months_dict {
+		months = append(months, month)
+	}
+
+	sort.Sort(sort.Reverse(sort.StringSlice(months)))
+
+	return months
 }

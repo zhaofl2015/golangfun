@@ -147,3 +147,11 @@ func (c *BlogController) ListApi() {
 	c.Data["json"] = &res
 	c.ServeJSON()
 }
+
+func (c *BlogController) BlogMonths() {
+	blog_inst := models.Blog{}
+	result := blog_inst.GetMonths()
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
