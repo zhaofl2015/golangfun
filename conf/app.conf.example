@@ -8,6 +8,8 @@ mongoblogcollection = "simpleblog"
 mongobloguser = "blog_user"
 mongoblogtag = "blogtag"
 
+elasticaddr = "http://10.200.8.127:9200"
+
 website = xxx.blog.me
 author = xxx
 # 首页预览的summary的长度

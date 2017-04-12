@@ -10,6 +10,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"gopkg.in/mgo.v2/bson"
+	elastic "gopkg.in/olivere/elastic.v3"
 )
 
 type BlogUser struct {
@@ -46,11 +47,19 @@ type BlogTag struct {
 	UpdateTime  time.Time     `json:"update_time" bson:"update_time"`
 }
 
+type TagCloud struct {
+	Name      string
+	Count     int
+	NameCount string
+	CssType   string
+}
+
 var (
 	BlogDBName         = beego.AppConfig.String("mongodb")
 	BlogCollection     = beego.AppConfig.String("mongoblogcollection")
 	BlogUserCollection = beego.AppConfig.String("mongobloguser")
 	BlogTagCollection  = beego.AppConfig.String("mongoblogtag")
+	ElasticHost        = beego.AppConfig.String("elasticaddr")
 )
 
 // 获取最新的日志
@@ -245,14 +254,15 @@ func (b Blog) GetMonths() []string {
 	return months
 }
 
-func (bt BlogTag) GetTags() []interface{} {
+func (bt BlogTag) GetTags() []TagCloud {
 
 	ds := NewDataStore()
 	defer ds.Close()
 
 	c := ds.C(BlogDBName, BlogTagCollection)
 
-	res := make([]interface{}, 0)
+	res := make([]TagCloud, 0)
+	default_res := make([]TagCloud, 0)
 
 	tag_list := []BlogTag{}
 
@@ -260,7 +270,19 @@ func (bt BlogTag) GetTags() []interface{} {
 	err := iter.All(&tag_list)
 	if err != nil {
 		utils.Logger.Warn("not found blogs in get tags")
-		return res
+		return default_res
+	}
+
+	for _, blog_tag := range tag_list {
+		res = append(res, TagCloud{Name: blog_tag.Name})
+		//		utils.Logger.Debug(blog_tag.Name)
+	}
+
+	client, err := elastic.NewClient(elastic.SetURL(ElasticHost))
+
+	if err != nil {
+		utils.Logger.Error("es connect failed")
+		return default_res
 	}
 
 	return res

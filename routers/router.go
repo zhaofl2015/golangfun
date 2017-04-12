@@ -20,6 +20,8 @@ func init() {
 
 	beego.Router("/blog-months", &controllers.BlogController{}, "get:BlogMonths")
 
+	beego.Router("/blog-tags", &controllers.BlogController{}, "get:BlogTagClouds")
+
 	beego.Router("/login", &controllers.UserController{}, "get:Login;post:Post")
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/fun", &controllers.UserController{}, "get:Fun")

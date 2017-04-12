@@ -155,3 +155,11 @@ func (c *BlogController) BlogMonths() {
 
 	c.ServeJSON()
 }
+
+func (c *BlogController) BlogTagClouds() {
+	blog_inst := models.BlogTag{}
+	result := blog_inst.GetTags()
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
