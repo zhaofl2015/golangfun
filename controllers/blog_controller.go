@@ -102,13 +102,9 @@ func (c *BlogController) GetDetailById() {
 	blog_inst := models.Blog{}
 	blog := blog_inst.GetById(id)
 
-	res := make(map[string]string)
+	data := blog_inst.ChangeToMapOne(blog)
 
-	res["Title"] = blog.Title
-	res["Content"] = blog.Content
-	res["Id"] = blog.Id.Hex()
-
-	c.Data["json"] = &res
+	c.Data["json"] = &data
 	c.ServeJSON()
 }
 

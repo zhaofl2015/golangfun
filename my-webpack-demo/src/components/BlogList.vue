@@ -14,11 +14,11 @@
                 </header>
                 <div v-html="blog.Summary" class="summary"></div>
                 <aside class="aside clearfix">
-                <!--<span class="withpadding">{{dateformat .CreateTime "2006-01-02 15:04:05"}}</span>-->
+                <span class="withpadding moveright">{{blog.CreateTime}}</span>
                   <a class="day moveright"><i class="fa fa-eye"></i> {{blog.ViewCount}}</a>
                   <a class="author">{{blog.Author}}</a>
                   <span class="tags">
-                    <a class="tag" v-for="tag in blog.Tags">{{tag}}</a>
+                    <span class="label label-info" v-for="tag in blog.Tags">{{tag}}</span>
                   </span>
                   <router-link v-bind:to="blog.Detail" class="btn btn-primary btn-lg pull-right">查看详细</router-link>
                 </aside>
@@ -28,7 +28,7 @@
         <div class="pagination" style="width: 100%;"><paginate :clickHandler="loadBlogs" :page-count="page_count" :prev-text="'Prev'" :next-text="'Next'" :container-class="'pagination'"></paginate></div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-3 col-sm-offset-1">
         <right></right>
       </div>
     </div>

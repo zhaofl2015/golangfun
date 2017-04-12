@@ -27,7 +27,9 @@ type Blog struct {
 	Content    string        `json:"content" bson:"content"`
 	Author     bson.ObjectId `json:"author" bson:"author"`
 	Comment    []string      `json:"comment" bson:"comment"`
-	CreateTime time.Time     `json:"create_time", bson:"create_time"`
+	CreateTime time.Time     `json:"create_time"  bson:"create_time"`
+	UpdateTime time.Time     `json:"update_time"  bson:"update_time"`
+	DeleteTime time.Time     `json:"delete_time"  bson:"delete_time"`
 	ViewCount  int           `json:"view_count" bson:"view_count"`
 	Visible    int           `json:"visible" bson:"visible"`
 	Tags       []string      `json:"tags" bson: "tags"`
@@ -54,14 +56,14 @@ func (b Blog) GetNewestBlog() *Blog {
 }
 
 //根据id获取日志
-func (b Blog) GetById(id string) *Blog {
+func (b Blog) GetById(id string) Blog {
 	ds := NewDataStore()
 	defer ds.Close()
 	c := ds.C(BlogDBName, BlogCollection)
 
 	result := Blog{}
 	c.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&result)
-	return &result
+	return result
 }
 
 // 批量获取日志
@@ -73,7 +75,7 @@ func (b Blog) GetList(page int, per_page int) ([]Blog, int) {
 	c := ds.C(BlogDBName, BlogCollection)
 
 	var result []Blog
-	err := c.Find(bson.M{}).Sort("-_id").All(&result)
+	err := c.Find(bson.M{"delete_time": nil}).Sort("-_id").All(&result)
 	if err != nil {
 		panic(err)
 	}
@@ -111,8 +113,11 @@ func (b Blog) ChangeToMapOne(blog Blog) map[string]interface{} {
 	res["ViewCount"] = blog.ViewCount
 	res["Author"] = user.Username
 	res["Visible"] = blog.Visible
+	res["VisibleText"] = utils.GetVisibleText(blog.Visible)
 	res["LastViewIP"] = blog.LastViewIP
-	res["CreateTime"] = blog.CreateTime
+	res["CreateTime"] = blog.CreateTime.UTC().Format("2006-01-02 15:04:05")
+	res["UpdateTime"] = blog.UpdateTime.UTC().Format("2006-01-02 15:04:05")
+	res["DeleteTime"] = blog.DeleteTime.UTC().Format("2006-01-02 15:04:05")
 	res["PureContent"] = utils.RemoveHtmlTag(blog.Content)
 	res["NewUrl"] = "/getone?id=" + blog.Id.Hex()
 	res["Detail"] = "/detail/" + blog.Id.Hex()
