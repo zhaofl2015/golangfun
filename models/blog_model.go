@@ -244,3 +244,7 @@ func (b Blog) GetMonths() []string {
 
 	return months
 }
+
+func (bt BlogTag) GetTags() []interface{} {
+
+}
