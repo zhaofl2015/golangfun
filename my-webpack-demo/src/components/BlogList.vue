@@ -25,7 +25,9 @@
               </div>
           </article>
         </div>
+        <div class="pagination" style="width: 100%;"><paginate :clickHandler="loadBlogs" :page-count="page_count" :prev-text="'Prev'" :next-text="'Next'" :container-class="'pagination'"></paginate></div>
       </div>
+
       <div class="col-md-4">
         <right></right>
       </div>
@@ -37,6 +39,7 @@
 
   import Right from './Right.vue'
   import Spinner from './Spinner.vue'
+  import Paginate from 'vuejs-paginate'
 
   export default {
     name: 'bloglist',
@@ -50,6 +53,9 @@
       },
       hasMore () {
         return this.page < this.maxPage
+      },
+      page_count () {
+        return parseInt((this.total + this.per_page - 1) / this.per_page);
       }
     },
 
@@ -60,7 +66,7 @@
     methods: {
       loadBlogs(to = this.page, from = -1) {
         this.loading = true
-        this.$http.get('/blog-list-api').then(
+        this.$http.get('/blog-list-api?page=' + to ).then(
             function(response) {
             return response.json();
           }
@@ -72,13 +78,18 @@
           this.loading = false;
         });
       }
+//      selectPage: function(page) {
+//        this.loading = true
+//        this.$http.get('/blog-list-api?page=' + page).then
+//      }
     },
 
     components: {
       Right,
-      Spinner
+      Spinner,
+      Paginate
     },
-    
+
     data: function() {
       return {
         loading: false,
@@ -104,4 +115,12 @@
   .moveright {
     margin-left: 50px;
   }
+
+  .pagination {
+    text-align: center;
+    margin: 0 auto;
+    left: 50%;
+    top: 50%;
+  }
+
 </style>
