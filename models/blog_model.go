@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"hello/utils"
 	"math/rand"
 	"sort"
@@ -49,7 +50,7 @@ type BlogTag struct {
 
 type TagCloud struct {
 	Name      string
-	Count     int
+	Count     int64
 	NameCount string
 	CssType   string
 }
@@ -60,6 +61,8 @@ var (
 	BlogUserCollection = beego.AppConfig.String("mongobloguser")
 	BlogTagCollection  = beego.AppConfig.String("mongoblogtag")
 	ElasticHost        = beego.AppConfig.String("elasticaddr")
+	ElasticBlogIndex   = beego.AppConfig.String("elasticblogindex")
+	ElasticBlogType    = beego.AppConfig.String("elasticblogtype")
 )
 
 // 获取最新的日志
@@ -266,6 +269,7 @@ func (bt BlogTag) GetTags() []TagCloud {
 
 	tag_list := []BlogTag{}
 
+	// 查找所有的标签名称
 	iter := c.Find(bson.M{"delete_time": nil}).Iter()
 	err := iter.All(&tag_list)
 	if err != nil {
@@ -278,6 +282,7 @@ func (bt BlogTag) GetTags() []TagCloud {
 		//		utils.Logger.Debug(blog_tag.Name)
 	}
 
+	// 从elasticsearch中查找对应的tag被使用量
 	client, err := elastic.NewClient(elastic.SetURL(ElasticHost))
 
 	if err != nil {
@@ -285,6 +290,45 @@ func (bt BlogTag) GetTags() []TagCloud {
 		return default_res
 	}
 
-	return res
+	//	exists, err := client.IndexExists("simpleblog").Do()
+	//	if err != nil {
+	//		utils.Logger.Warn("failed to check index")
+	//	}
+	//	if !exists {
+	//		// Index does not exist yet.
+	//		utils.Logger.Warn("not found index simpleblog")
+	//	} else {
+	//		utils.Logger.Debug("found simpleblog")
+	//	}
 
+	search := client.Search().Index(ElasticBlogIndex).Type(ElasticBlogType)
+
+	search = search.Aggregation("all_tags", elastic.NewTermsAggregation().Field("tags").Size(0))
+
+	sr, err := search.Do()
+	if err != nil {
+		utils.Logger.Error("execute elasticsearch aggregation failed")
+		return default_res
+	}
+
+	name_count := make(map[string]int64)
+
+	if agg, found := sr.Aggregations.Terms("all_tags"); found {
+		for _, bucket := range agg.Buckets {
+			name_count[bucket.Key.(string)] = bucket.DocCount
+		}
+	}
+
+	// 更新数量和数量名称字段
+	for ind, blog_tag := range res {
+		if count, found := name_count[blog_tag.Name]; found {
+			utils.Logger.Debug("found %s, %d", blog_tag.Name, count)
+			res[ind].Count = count
+			res[ind].NameCount = fmt.Sprintf("%s (%d)", blog_tag.Name, count)
+			// 随机给出csstype
+			res[ind].CssType = fmt.Sprintf("tagc%d", rand.Intn(3)+1)
+		}
+	}
+
+	return res
 }

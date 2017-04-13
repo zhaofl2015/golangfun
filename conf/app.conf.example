@@ -9,6 +9,8 @@ mongobloguser = "blog_user"
 mongoblogtag = "blogtag"
 
 elasticaddr = "http://127.0.0.1:9200"
+elasticblogindex = "simpleblog"
+elasticblogtype = "blogpost"
 
 website = xxx.blog.me
 author = xxx
