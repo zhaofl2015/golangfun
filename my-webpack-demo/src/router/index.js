@@ -5,6 +5,7 @@ import Detail from '@/components/Detail'
 import BlogList from '@/components/BlogList'
 
 var VueResource = require('vue-resource')
+//var TagCloud = require('TagCloud')
 
 Vue.use(Router)
 Vue.use(VueResource)
