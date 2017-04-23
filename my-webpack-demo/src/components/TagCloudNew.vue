@@ -1,7 +1,7 @@
 <template id='tagcloudnew'>
-	<div style="height: 400px; width: 400px;">	
+	<div style="height: 200px; width: 200px;">	
+	    <h4><strong>标签云</strong></h4>
     	<div class="tagcloud">
-    	    <h4><strong>标签云</strong></h4>
     	    <a href="#" :class="tagitem.CssType" v-for="tagitem in all_tags">{{tagitem.NameCount}}</a>
     	</div>
 	</div>
@@ -11,6 +11,7 @@
 <script>
 
 require('TagCloud');
+
 
 export default {
   name: 'tagcloudnew',
@@ -27,7 +28,43 @@ export default {
 
   data() {
     return {
-      all_tags: [{"CssType": "tagc1", "NameCount": "defaut"}]
+      all_tags: [
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		{"CssType": "tagc1", "NameCount": "defaut"},
+		]
     }
   },
   methods: {
@@ -66,6 +103,7 @@ export default {
   display:inline-block;
   border-radius:3px;
 }
+*/
 #tagscloud a.tagc1{
   background:#38D66F;
   color:#fff;
@@ -78,6 +116,7 @@ export default {
   background:#948D10;
   color:#fff;
 }
+/*
 #tagscloud a:hover{
   color:#fff;
   background:#0099ff;
