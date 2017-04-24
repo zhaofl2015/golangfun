@@ -25,46 +25,21 @@ export default {
       tagcloud();
     });
   },
+  beforeCreate: function() {
+    this.$http.get("/blog-tags").then(
+      function(response) {
+        return response.json();
+      }
+    ).then(function(json){
+      this.all_tags = json;
+    });  
+  },
 
   data() {
     return {
       all_tags: [
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		{"CssType": "tagc1", "NameCount": "defaut"},
-		]
+        {"CssType": "tagc1", "NameCount": "defaut"}
+      ]
     }
   },
   methods: {
