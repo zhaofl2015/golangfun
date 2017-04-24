@@ -37,7 +37,7 @@
 
       <div class="col-md-3 col-sm-offset-1">
         <archive></archive>
-        <tagCloudNew></tagCloudNew>
+        <tagCloud></tagCloud>
       </div>
     </div>
 
@@ -50,6 +50,7 @@
   import Right from './Right.vue'
   import Archive from './Archive'
   import TagCloudNew from './TagCloudNew.vue'
+  import TagCloud from './TagCloud.vue'
 
 export default {
   name: 'detail',
@@ -71,7 +72,8 @@ export default {
   components: {
     Right,
     Archive,
-    TagCloudNew
+    TagCloudNew,
+    TagCloud
   },
   methods: {
     change: function(event) {
