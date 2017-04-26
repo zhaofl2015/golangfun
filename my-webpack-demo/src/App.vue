@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="height: 100%;">
     <!--img src="./assets/logo.png"-->
     <navi></navi>
     <!--<topnavi></topnavi>-->

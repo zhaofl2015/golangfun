@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Detail from '@/components/Detail'
 import BlogList from '@/components/BlogList'
+import EditBlog from '@/components/EditBlog'
 
 var VueResource = require('vue-resource')
 //var TagCloud = require('TagCloud')
@@ -31,6 +32,11 @@ export default new Router({
       path: '/blog-list-api',
       name: 'Blogs',
       component: BlogList
+    },
+    {
+      path: '/editblog',
+      name: 'EditBlog',
+      component: EditBlog
     }
   ]
 })
